@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jpegconvertor</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f5;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #fileinput {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .image-wrapper {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .image-wrapper img,
+        .image-comwrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .slidecontainer {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+
+        }
+
+        .slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        #slidecontainervalue {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #downloadbtn {
+            display: inline-block;
+            margin: 10px 0; 
+            text-align: center;
+            width: 100%;
+            padding: 12px 0;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            border: none;
+        }
+
+        #downloadbtn:hover {
+            background-color: #0056b3;
+        }
+
+        .slidecontainer {
+            text-transform: capitalize;
+            display: flex;
+            height: 50px;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .slidecontainer input {
+            width: 30px;
+            border-radius: 2px;
+            border: 1px solid #909090;
+            padding: 5px;
+        }
+
+       
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <input id="Fileinput" type="file" accept="jpeg,jpg">
+
+        <div class="image-wrapper">
+            <img src="" alt="">
+        </div>
+        <button id="downloadbtn" onclick="png()">Download png Image</button>
+        <button id="downloadbtn" onclick="gif()">Download Gif Image</button>
+        <button id="downloadbtn" onclick="webp()">Download webp Image</button>
+        <button id="downloadbtn" onclick="psd()">Download Psd Image</button>
+    </div>
+    <script>
+        const imgcontainer = document.querySelector(".image-wrapper img");
+var fileinput = null;
+
+document.getElementById("Fileinput").addEventListener("change", (e) => {
+    fileinput = e.target.files[0];
+    const fileurl = URL.createObjectURL(fileinput);
+    imgcontainer.src = fileurl;
+});
+
+function convertAndDownloadImage(format) {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileinput);
+
+    reader.onload = () => {
+        let fileconvert = reader.result;
+        let mimeType = `data:image/${format}`;
+        fileconvert = fileconvert.replace(/^data:image\/jpeg/, mimeType);
+        triggerDownload(fileconvert, `converted_image.${format}`);
+    };
+
+    reader.onerror = () => {
+        console.log('Error reading file');
+    };
+}
+
+function triggerDownload(dataURL, filename) {
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = filename;
+    link.click();
+}
+
+function png() {
+    convertAndDownloadImage('png');
+}
+
+function gif() {
+    convertAndDownloadImage('gif');
+}
+
+function webp() {
+    convertAndDownloadImage('webp');
+}
+function psd() {
+    convertAndDownloadImage('psd');
+}
+
+
+
+
+    </script>
+
+</body>
+
+</html>

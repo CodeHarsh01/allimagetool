@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagetopdf</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f5;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #fileinput {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .image-wrapper {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .image-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+     
+        #downloadbtn {
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            padding: 12px 0;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            border: none;
+        }
+
+        #downloadbtn:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input  id="Fileinput" type="file" accept=".jpg,.jpeg">
+
+        <div class="image-wrapper">
+           <img src="" alt="">
+        </div>
+
+        
+        <button id="downloadbtn" onclick="pdf()">Download pdf </button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+    <script >
+        document.getElementById("Fileinput").addEventListener("change",(e)=>{
+            const fileinput = e.target.files[0]
+            const fileurl = URL.createObjectURL(fileinput)
+            const imgcontainer = document.querySelector(".image-wrapper img")
+            imgcontainer.src = fileurl
+
+           
+
+            
+        })
+        function pdf(){
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const imgcontainer = document.querySelector(".image-wrapper img")
+            doc.addImage(imgcontainer, 'JPEG', 50, 50);
+            doc.save('imagetopdf.pdf')
+            }
+    </script>
+</body>
+</html>
