@@ -82,24 +82,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
-    <script >
-        document.getElementById("Fileinput").addEventListener("change",(e)=>{
-            const fileinput = e.target.files[0]
-            const fileurl = URL.createObjectURL(fileinput)
-            const imgcontainer = document.querySelector(".image-wrapper img")
-            imgcontainer.src = fileurl
-
-           
-
-            
-        })
-        function pdf(){
+    <script>
+        document.getElementById("Fileinput").addEventListener("change", (e) => {
+            const fileinput = e.target.files[0];
+            const fileurl = URL.createObjectURL(fileinput);
+            const imgcontainer = document.querySelector(".image-wrapper img");
+            imgcontainer.src = '';
+            imgcontainer.src = fileurl;
+        });
+    
+        function pdf() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const imgcontainer = document.querySelector(".image-wrapper img")
-            doc.addImage(imgcontainer, 'JPEG', 50, 50);
-            doc.save('imagetopdf.pdf')
-            }
+            const imgcontainer = document.querySelector(".image-wrapper img");
+    
+            imgcontainer.onload = function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = imgcontainer.naturalWidth;
+                canvas.height = imgcontainer.naturalHeight;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.drawImage(imgcontainer, 0, 0);
+    
+                const imgData = canvas.toDataURL('image/jpeg');
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = doc.internal.pageSize.getHeight();
+                const imgWidth = imgcontainer.naturalWidth;
+                const imgHeight = imgcontainer.naturalHeight;
+    
+                
+                const scale = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                console.log(scale);
+                
+                const width = imgWidth * scale;
+                const height = imgHeight * scale;
+    
+                // Center the image
+                const x = (pdfWidth - width) / 2;
+                const y = (pdfHeight - height) / 2;
+    
+                doc.addImage(imgData, 'JPEG', x, y, width, height);
+                doc.save('imagetopdf.pdf');
+            };
+    
+            if (imgcontainer.complete) {
+            imgcontainer.onload();
+        }
+            
+        }
     </script>
+    
+    
+    
 </body>
 </html>
